@@ -238,6 +238,9 @@ class threeCommasAPI {
     return await this.makeRequest('POST', `/public/api/ver1/accounts/${account_id}/remove?`, { account_id })
   }
 
+  async changeMode(mode) {
+    return await this.makeRequest('POST', `/public/api/ver1/users/change_mode?`, { mode })
+  }
 }
 
 module.exports = threeCommasAPI

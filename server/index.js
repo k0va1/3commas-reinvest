@@ -34,9 +34,21 @@ app.get('/bots.json', async(req, res, next) => {
 app.post('/bots/:id/reinvest', async(req, res, next) => {
   try {
     const bot = await api.botShow(req.params.id)
-    console.log(bot)
-    res.json(bot);
+    const newBaseOrderVolume = parseFloat(bot.base_order_volume) + parseFloat(req.body.amount)
+    const paramsForUpdate = Object.assign(bot, {bot_id: bot.id, base_order_volume: newBaseOrderVolume || bot.base_order_volume})
+    const updatedBot = await api.botUpdate(paramsForUpdate)
+    res.json({success: true, bot: updatedBot})
   } catch (error) {
+    return next(error)
+  }
+})
+
+app.post('/mode', async(req, res, next) => {
+  try {
+    const mode = req.body.mode || "real"
+    await api.changeMode(mode)
+    res.json({success: true})
+} catch (error) {
     return next(error)
   }
 })
